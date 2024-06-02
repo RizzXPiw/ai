@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI RizzPiw</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+nav {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+nav h1 {
+  margin: 0;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+}
+
+nav h1 i {
+  margin-right: 10px;
+}
+
+nav button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  animation: slideDownMenu 0.5s ease;
+  text-align: center;
+}
+
+.dropdown-menu.dark-mode {
+  background-color: #333333;
+}
+
+@keyframes slideDownMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 20px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.dropdown-menu a.dark-mode {
+  color: #ffffff;
+}
+
+.dropdown-menu a i {
+  margin-right: 10px;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown-menu a.dark-mode:hover {
+  background-color: #555555;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.response-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  min-height: 80%;
+  max-height: 80%;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: transparent;
+  border-radius: 10px;
+  gap: 5px;
+  padding-bottom: 80px;
+}
+
+.response-container.dark-mode {
+  background-color: transparent;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.message {
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.user-message {
+  background-color: #909090;
+  align-self: flex-end;
+}
+
+.user-message.dark-mode {
+  background-color: #444444;
+}
+
+.answer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.answer {
+  color: #000;
+  position: relative;
+  align-self: flex-start;
+  margin-bottom: 30px;
+  max-width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #BABEBE;
+}
+
+.answer.dark-mode {
+  background-color: #BABEBE;
+  color: #ffffff;
+}
+
+.code-answer {
+  background-color: #f8f9fa;
+  color: #212529;
+  padding: 10px;
+  border-radius: 10px;
+  position: relative;
+  margin: 5px 0;
+  width: calc(100% - 20px);
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.code-answer.dark-mode {
+  background-color: #333333;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.code-answer pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background: none;
+  border: none;
+}
+
+.copy-button {
+  background-color: transparent;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  text-decoration: none;
+}
+
+.copy-button:hover {
+  background-color: transparent;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.copy-button:active {
+  animation: blink 0.5s infinite;
+}
+
+.copy-button.blink {
+  animation: blink 0.2s step-end infinite alternate;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.searching {
+  color: #007bff;
+  font-size: 24px;
+  animation: blink 1s infinite;
+  align-self: flex-start;
+}
+
+.label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.label.dark-mode {
+  color: #bbbbbb;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #007bff;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+}
+
+.code-type {
+  font-size: 14px;
+  color: #007bff;
+  font-family: Arial, sans-serif;
+}
+
+#input-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#input-container.dark-mode {
+  background-color: #595959;
+}
+
+#inputText {
+  width: calc(100% - 80px);
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  resize: none;
+  height: 40px;
+}
+
+#inputText.dark-mode {
+  background-color: #444444;
+  color: #ffffff;
+}
+
+#send-button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background-color: #007bff;
+  color: #ffffff;
+  cursor: pointer;
+  outline: none;
+}
+
+#send-button.dark-mode {
+  background-color: #007bff;
+}
+
+#send-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+#send-button.dark-mode:disabled {
+  background-color: #888888;
+}
+
+.time-label {
+  font-size: 10px;
+  color: #888;
+  text-align: right;
+  margin-top: -5px;
+}
+
+.time-label.dark-mode {
+  color: #bbbbbb;
+}
+  </style>
+</head>
+<body>
+  <nav>
+    <h1><i class="fa fa-comments"></i> RizzPiw</h1>
+    <button id="menu-button"><i class="fa fa-bars"></i></button>
+    <div class="dropdown-menu" id="dropdown-menu">
+      <a href="https://wa.me/62895614033342"><i class="fa fa-user"></i> Creator</a>
+      <a href="https://chat.whatsapp.com/J4ZZme5lLn45ajMzG2tAtA"><i class="fa fa-home"></i> Group Whatsapp</a>
+      <a href="#" id="theme-toggle"><i class="fa fa-adjust"></i> <span>Dark Mode</span></a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="response-container background-animate" id="response"></div>
+  </div>
+
+  <div id="input-container">
+    <input type="text" id="inputText" placeholder="Ketik sesuatu...">
+    <button id="send-button" disabled>Enter</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const sendButton = document.getElementById('send-button');
+  const inputText = document.getElementById('inputText');
+  const menuButton = document.getElementById('menu-button');
+  const dropdownMenu = document.getElementById('dropdown-menu');
+  const themeToggle = document.getElementById('theme-toggle');
+  const responseContainer = document.getElementById('response');
+  const inputContainer = document.getElementById('input-container');
+  let messageHistory = [];
+
+  // Fungsi untuk mengganti tema
+    themeToggle.addEventListener('click', function () {
+    document.body.classList.toggle('dark-mode');
+    dropdownMenu.classList.toggle('dark-mode');
+    responseContainer.classList.toggle('dark-mode');
+    inputText.classList.toggle('dark-mode');
+    sendButton.classList.toggle('dark-mode');
+    inputContainer.classList.toggle('dark-mode');
+
+    const messages = document.querySelectorAll('.message, .answer, .code-answer, .label, .time-label');
+    messages.forEach(function (msg) {
+        msg.classList.toggle('dark-mode');
+    });
+
+    // Ganti ikon tema dan teks
+    const icon = themeToggle.querySelector('i');
+    const text = themeToggle.querySelector('span');
+
+    if (document.body.classList.contains('dark-mode')) {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        text.innerText = 'Bright Mode'; // Mengubah teks menjadi "Bright Mode"
+    } else {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        text.innerText = 'Dark Mode'; // Mengubah teks menjadi "Dark Mode"
+    }
+});
+
+  sendButton.disabled = true;
+
+  inputText.addEventListener('input', function () {
+    if (inputText.value.trim() !== '') {
+      sendButton.disabled = false;
+    } else {
+      sendButton.disabled = true;
+    }
+  });
+
+  sendButton.addEventListener('click', function () {
+    if (inputText.value.trim() !== '') {
+      submitText();
+    }
+  });
+
+  menuButton.addEventListener('click', function () {
+    if (dropdownMenu.style.display === 'block') {
+      dropdownMenu.style.display = 'none';
+    } else {
+      dropdownMenu.style.display = 'block';
+    }
+  });
+
+  inputText.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (inputText.value.trim() !== '') {
+        submitText();
+      }
+    }
+  });
+
+  async function submitText() {
+    var inputTextValue = document.getElementById('inputText').value;
+    if (inputTextValue.trim() !== '') {
+      var responseContainer = document.getElementById('response');
+      const timeLabel = new Date().toLocaleTimeString('id-ID');
+
+      // Membuat container untuk pesan pengguna
+      var userMessageContainer = document.createElement('div');
+      userMessageContainer.className = 'message-container';
+
+      // Membuat label "Anda"
+      var userLabel = document.createElement('div');
+      userLabel.className = 'label';
+      userLabel.innerText = 'Anda';
+      userMessageContainer.appendChild(userLabel);
+
+      // Membuat div untuk pesan pengguna
+      var messageDiv = document.createElement('div');
+      messageDiv.className = 'message user-message';
+      messageDiv.innerText = inputTextValue;
+      userMessageContainer.appendChild(messageDiv);
+
+      // Membuat label waktu
+      var timeDiv = document.createElement('div');
+      timeDiv.className = 'time-label';
+      timeDiv.innerText = timeLabel;
+      userMessageContainer.appendChild(timeDiv);
+
+      responseContainer.appendChild(userMessageContainer);
+      document.getElementById('inputText').value = '';
+
+      displayLoader();
+      await sendMessage(inputTextValue, timeLabel);
+    }
+  }
+
+  function displayLoader() {
+    var responseContainer = document.getElementById('response');
+    var loader = document.createElement('div');
+    loader.className = 'searching';
+    loader.innerHTML = '•';
+    loader.id = 'loader';
+    responseContainer.appendChild(loader);
+  }
+
+  async function sendMessage(question, userTime) {
+    try {
+      const today = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const hari = today.toLocaleDateString('id-ID', { weekday: 'long' });
+      const tanggal = today.toLocaleDateString('id-ID', options);
+      const jam = today.toLocaleTimeString('id-ID');
+
+      // Menyimpan pertanyaan pengguna dalam riwayat pesan
+      messageHistory.push({ role: "user", content: question });
+
+      const response = await axios.post("https://deepenglish.com/wp-json/ai-chatbot/v1/chat", {
+        messages: [
+          { role: "system", content: `Hallo, Saya bernama 𝗭𝗵𝗲𝗲𝗥𝗲𝘅𝘅 - 𝗔𝗜 yang dibuat oleh 𝗥𝗶𝘇𝘇𝗣𝗶𝘄. Saya dapat membantu kamu dalam membuat berbagai hal seperti menyelesaikan tugas, membuat bahasa pemrograman, dll. (Hari ini : ${hari}, Tanggal : ${tanggal}, Jam : ${jam})` },
+          ...messageHistory // Mengirim seluruh riwayat pesan untuk menyambung percakapan
+        ]
+      });
+
+      if (!response.data) {
+        throw new Error('No data received');
+      }
+
+      const hasil = response.data;
+      displayAnswer(hasil.answer, jam);
+
+      // Menyimpan jawaban dalam riwayat pesan
+      messageHistory.push({ role: "assistant", content: hasil.answer });
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      displayAnswer('Maaf, terjadi kesalahan dalam mengambil jawaban.', jam);
+    }
+  }
+
+  function displayAnswer(answer, answerTime) {
+    var responseContainer = document.getElementById('response');
+    var loader = document.getElementById('loader');
+    if (loader) {
+      loader.remove();
+    }
+
+    var answerContainer = document.createElement('div');
+    answerContainer.className = 'answer-container';
+
+    // Membuat label "ZheeRexx"
+    var zheerexxLabel = document.createElement('div');
+    zheerexxLabel.className = 'label';
+    zheerexxLabel.innerText = 'ZheeRexx';
+    answerContainer.appendChild(zheerexxLabel);
+
+    // Membuat div untuk jawaban
+    var answerBox = document.createElement('div');
+    answerBox.className = 'answer visible';
+    answerBox.style.marginBottom = '5px'; // Mengurangi jarak antara jawaban biasa dan kode
+    answerContainer.appendChild(answerBox);
+
+    // Memisahkan teks jawaban biasa dari kode
+    const codePattern = /```(\w+)?\n([\s\S]*?)```/g;
+    const boldPattern = /\*\*(.*?)\*\*/g; // Pattern untuk mendeteksi teks tebal
+
+    let lastIndex = 0;
+    let match;
+
+    while ((match = codePattern.exec(answer)) !== null) {
+      // Menambahkan teks sebelum blok kode
+      if (match.index > lastIndex) {
+        let textBeforeCode = answer.substring(lastIndex, match.index);
+        textBeforeCode = textBeforeCode.replace(boldPattern, '<strong>$1</strong>'); // Mengubah teks tebal menjadi <strong>
+        answerBox.innerHTML += textBeforeCode.replace(/\n/g, '<br>');
+      }
+
+      const lang = match[1] || '';
+      const codeContent = match[2];
+
+      const codeContainer = document.createElement('div');
+      codeContainer.className = 'code-answer';
+
+      const codeHeader = document.createElement('div');
+      codeHeader.className = 'code-header';
+
+      const codeType = document.createElement('span');
+      codeType.className = 'code-type';
+      codeType.innerHTML = `<strong>${lang.toUpperCase()}</strong>`;
+
+      const copyButton = document.createElement('button');
+      copyButton.className = 'copy-button';
+      copyButton.innerHTML = '<strong>Salin Code</strong>';
+      copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(codeContent)
+          .then(() => {
+            // Salin teks langsung ke clipboard
+            document.execCommand('paste');
+          })
+          .catch((error) => {
+            console.error("Error copying to clipboard: ", error);
+            alert("Failed to paste code to keyboard/perangkat.");
+          });
+      });
+
+      codeHeader.appendChild(codeType);
+      codeHeader.appendChild(copyButton);
+
+      const pre = document.createElement('pre');
+      pre.innerText = codeContent;
+
+      codeContainer.appendChild(codeHeader);
+      codeContainer.appendChild(pre);
+
+      // Menambahkan kode dengan latar belakang khusus ke dalam jawaban
+      answerBox.appendChild(codeContainer);
+
+      lastIndex = codePattern.lastIndex;
+    }
+
+    // Menambahkan teks setelah blok kode terakhir
+    if (lastIndex < answer.length) {
+      let textAfterCode = answer.substring(lastIndex);
+      textAfterCode = textAfterCode.replace(boldPattern, '<strong>$1</strong>'); // Mengubah teks tebal menjadi <strong>
+          answerBox.innerHTML += textAfterCode.replace(/\n/g, '<br>');
+        }
+
+        // Membuat label waktu
+        var timeDiv = document.createElement('div');
+        timeDiv.className = 'time-label';
+        timeDiv.innerText = answerTime;
+        answerContainer.appendChild(timeDiv);
+
+        responseContainer.appendChild(answerContainer);
+
+        // Scroll otomatis ke bawah
+        responseContainer.scrollTop = responseContainer.scrollHeight;
+      }
+    });
+  </script>
+</body>
+</html>
